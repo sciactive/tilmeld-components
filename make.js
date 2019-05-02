@@ -9,9 +9,6 @@ let components = ['ChangePassword', 'Login', 'Recover'];
 try {
   fs.mkdirSync('lib');
 } catch (e) {}
-try {
-  fs.mkdirSync('lib/Components');
-} catch (e) {}
 
 // Compile Svelte component.
 for (let name of components) {
