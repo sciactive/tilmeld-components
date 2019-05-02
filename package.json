@@ -24,7 +24,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sciactive/tilmeld-client.git"
+    "url": "git+https://github.com/sciactive/tilmeld-components.git"
   },
   "keywords": [
     "users",
@@ -39,9 +39,9 @@
   "author": "Hunter Perrin <hperrin@gmail.com>",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/sciactive/tilmeld-client/issues"
+    "url": "https://github.com/sciactive/tilmeld-components/issues"
   },
-  "homepage": "https://github.com/sciactive/tilmeld-client#readme",
+  "homepage": "https://github.com/sciactive/tilmeld-components#readme",
   "dependencies": {
     "nymph-client": "^4.0.0-beta.17",
     "pform": "^3.3",
