@@ -1,2 +1,4 @@
-# tilmeld-components
+Tilmeld Commponents
+===================
+
 Frontend components for Tilmeld.
