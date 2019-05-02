@@ -1,4 +1,4 @@
-Tilmeld Commponents
-===================
+Tilmeld Components
+==================
 
 Frontend components for Tilmeld.
