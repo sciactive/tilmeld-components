@@ -3,12 +3,14 @@
   {#if _successLoginMessage}
     {_successLoginMessage}
   {:else}
-    <a href="javascript:void(0);" on:click={() => _showDialog = true}>{compactText}</a>
+    <a href="javascript:void(0);" on:click={() => (_showDialog = true)}>
+      {compactText}
+    </a>
   {/if}
 {/if}
 {#if layout !== 'compact' || _showDialog}
   <div class="login-dialog-container layout-{layout}">
-    <div class="login-dialog-overlay" on:click={() => _showDialog = false}></div>
+    <div class="login-dialog-overlay" on:click={() => (_showDialog = false)} />
     {#if _registering || _loggingin}
       <div class="login-dialog loading">
         <span>
@@ -21,7 +23,8 @@
             version="1.1"
           >
             <path
-              d="M 150,0 a 150,150 0 0,1 106.066,256.066 l -35.355,-35.355 a -100,-100 0 0,0 -70.711,-170.711 z"
+              d="M 150,0 a 150,150 0 0,1 106.066,256.066 l -35.355,-35.355 a
+              -100,-100 0 0,0 -70.711,-170.711 z"
               fill="#000000"
             >
               <animateTransform
@@ -37,12 +40,8 @@
               />
             </path>
           </svg>
-          {#if _registering}
-            Registering...
-          {/if}
-          {#if _loggingin}
-            Logging in...
-          {/if}
+          {#if _registering}Registering...{/if}
+          {#if _loggingin}Logging in...{/if}
         </span>
       </div>
     {:else if _successRegisteredMessage}
@@ -50,7 +49,11 @@
         <div>{_successRegisteredMessage}</div>
         {#if layout === 'compact'}
           <div class="close-button-container">
-            <button class="pf-button {classButton}" type="button" on:click={() => _showDialog = false}>
+            <button
+              class="pf-button {classButton}"
+              type="button"
+              on:click={() => (_showDialog = false)}
+            >
               Close
             </button>
           </div>
@@ -61,7 +64,10 @@
         <div>{_successLoginMessage}</div>
       </div>
     {:else}
-      <form onsubmit="return false;" class="login-dialog pf-form {layout === 'small' ? 'pf-layout-block' : ''}">
+      <form
+        onsubmit="return false;"
+        class="login-dialog pf-form {layout === 'small' ? 'pf-layout-block' : ''}"
+      >
         {#if layout === 'compact' && showCompactHeading}
           <div class="pf-element pf-heading">
             <h2 class="login-dialog-title">{compactText}</h2>
@@ -71,18 +77,22 @@
           <div class="pf-element pf-full-width">
             <span class={classButtonGroup}>
               <button
-                class="{classButton} {classButtonToggle} {existingUser ? classButtonActive : ''}"
+                class="{classButton}
+                {classButtonToggle}
+                {existingUser ? classButtonActive : ''}"
                 type="button"
-                on:click={() => existingUser = true}
+                on:click={() => (existingUser = true)}
                 disabled={existingUser && disableActiveButton}
                 aria-pressed={existingUser}
               >
                 Log In
               </button>
               <button
-                class="{classButton} {classButtonToggle} {!existingUser ? classButtonActive : ''}"
+                class="{classButton}
+                {classButtonToggle}
+                {!existingUser ? classButtonActive : ''}"
                 type="button"
-                on:click={() => existingUser = false}
+                on:click={() => (existingUser = false)}
                 disabled={!existingUser && disableActiveButton}
                 aria-pressed={!existingUser}
               >
@@ -94,8 +104,13 @@
 
         <div class="pf-element">
           <label>
-            <span class="pf-label">{_clientConfig.email_usernames ? 'Email' : 'Username'}</span>
-            <span class={layout !== 'small' ? 'pf-group' : ''} style="display: {layout !== 'small' ? 'block' : 'in-line'};">
+            <span class="pf-label">
+              {_clientConfig.email_usernames ? 'Email' : 'Username'}
+            </span>
+            <span
+              class={layout !== 'small' ? 'pf-group' : ''}
+              style="display: {layout !== 'small' ? 'block' : 'in-line'};"
+            >
               {#if _clientConfig.email_usernames}
                 <input
                   class="pf-field {classInput}"
@@ -139,7 +154,7 @@
               class="pf-field {classInput}"
               bind:value={password}
               type="password"
-              autocomplete="{(_clientConfig.allow_registration && !existingUser) ? 'new' : 'current'}-password"
+              autocomplete="{_clientConfig.allow_registration && !existingUser ? 'new' : 'current'}-password"
               name="password"
               size="24"
             />
@@ -210,7 +225,9 @@
             <div class="pf-element {layout === 'small' ? 'pf-full-width' : ''}">
               <label>
                 <span class="pf-label">Timezone</span>
-                <span class="pf-note">This overrides the primary group&apos;s timezone.</span>
+                <span class="pf-note">
+                  This overrides the primary group&apos;s timezone.
+                </span>
                 <span
                   class={layout === 'compact' ? 'pf-group' : ''}
                   style="display: {layout === 'compact' ? 'block' : 'in-line'};"
@@ -281,7 +298,9 @@
                   />
                 </label>
               </div>
-              <div class="pf-element {layout === 'small' ? 'pf-full-width' : ''}">
+              <div
+                class="pf-element {layout === 'small' ? 'pf-full-width' : ''}"
+              >
                 <span class="pf-label">City, State</span>
                 <span
                   class={layout === 'compact' ? 'pf-group' : ''}
@@ -333,7 +352,7 @@
                         cols="35"
                         bind:value={addressInternational}
                         name="address"
-                      ></textarea>
+                      />
                     </span>
                   </span>
                 </label>
@@ -344,14 +363,23 @@
         {#if _failureMessage}
           <div class="pf-element pf-full-width">
             <span class="pf-group pf-full-width">
-              <span class="pf-field" style="display: block; white-space: pre-line;">{_failureMessage}</span>
+              <span
+                class="pf-field"
+                style="display: block; white-space: pre-line;"
+              >
+                {_failureMessage}
+              </span>
             </span>
           </div>
         {/if}
 
         <div class="pf-element {layout === 'small' ? '' : 'pf-buttons'}">
           {#if existingUser}
-            <button class="pf-button {classSubmit}" type="submit" on:click={login}>
+            <button
+              class="pf-button {classSubmit}"
+              type="submit"
+              on:click={login}
+            >
               Log In
             </button>
           {:else}
@@ -367,7 +395,7 @@
             <button
               class="pf-button {classButton}"
               type="button"
-              on:click={() => _showDialog = false}
+              on:click={() => (_showDialog = false)}
             >
               Close
             </button>
@@ -380,11 +408,11 @@
               <span class="pf-field" style="display: block;">
                 <Recover
                   account={username}
-                  classInput={classInput}
-                  classRadio={classRadio}
-                  classSubmit={classSubmit}
-                  classButton={classButton}
-                ></Recover>
+                  {classInput}
+                  {classRadio}
+                  {classSubmit}
+                  {classButton}
+                />
               </span>
             </span>
           </div>
@@ -573,7 +601,7 @@
       () => {
         _failureMessage = 'An error occurred.';
         _loggingin = false;
-      }
+      },
     );
   }
 
@@ -650,7 +678,7 @@
             ? err.message
             : 'An error occurred.';
         _registering = false;
-      }
+      },
     );
   }
 
@@ -678,7 +706,7 @@
         () => {
           _usernameVerified = false;
           _usernameVerifiedMessage = 'Error checking username.';
-        }
+        },
       );
     }, 400);
   }

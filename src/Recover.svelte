@@ -1,15 +1,41 @@
 <svelte:options accessors={true} />
-<a href="javascript:void(0);" on:click={() => _showDialog = true}>{linkText}</a>
+<a href="javascript:void(0);" on:click={() => (_showDialog = true)}>
+  {linkText}
+</a>
 
 {#if _showDialog}
   <div class="recovery-dialog-container layout-compact">
-    <div class="recovery-dialog-overlay" on:click={() => _showDialog = false}></div>
+    <div
+      class="recovery-dialog-overlay"
+      on:click={() => (_showDialog = false)}
+    />
     {#if _recovering}
       <div class="recovery-dialog loading">
         <span>
-          <svg style="display: inline;" width="16" height="16" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" version="1.1">
-            <path d="M 150,0 a 150,150 0 0,1 106.066,256.066 l -35.355,-35.355 a -100,-100 0 0,0 -70.711,-170.711 z" fill="#000000">
-              <animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 150 150" to="360 150 150" begin="0s" dur="1s" fill="freeze" repeatCount="indefinite" />
+          <svg
+            style="display: inline;"
+            width="16"
+            height="16"
+            viewBox="0 0 300 300"
+            xmlns="http://www.w3.org/2000/svg"
+            version="1.1"
+          >
+            <path
+              d="M 150,0 a 150,150 0 0,1 106.066,256.066 l -35.355,-35.355 a
+              -100,-100 0 0,0 -70.711,-170.711 z"
+              fill="#000000"
+            >
+              <animateTransform
+                attributeName="transform"
+                attributeType="XML"
+                type="rotate"
+                from="0 150 150"
+                to="360 150 150"
+                begin="0s"
+                dur="1s"
+                fill="freeze"
+                repeatCount="indefinite"
+              />
             </path>
           </svg>
           This will just take a second...
@@ -17,11 +43,15 @@
       </div>
     {:else if _successRecoveredMessage}
       <div class="recovery-dialog">
-        <div>
-          {_successRecoveredMessage}
-        </div>
+        <div>{_successRecoveredMessage}</div>
         <div class="close-button-container">
-          <button class="pf-button {classButton}" type="button" on:click={() => _showDialog = false}>Close</button>
+          <button
+            class="pf-button {classButton}"
+            type="button"
+            on:click={() => (_showDialog = false)}
+          >
+            Close
+          </button>
         </div>
       </div>
     {:else}
@@ -33,51 +63,103 @@
           {#if !_clientConfig.email_usernames}
             <div class="pf-element">
               <span class="pf-label">Recovery Type</span>
-              <label><input class="pf-field {classRadio}" bind:group={recoveryType} type="radio" name="type" value="password" /> I forgot my password.</label>
-              <label><input class="pf-field {classRadio}" bind:group={recoveryType} type="radio" name="type" value="username" /> I forgot my username.</label>
+              <label>
+                <input
+                  class="pf-field {classRadio}"
+                  bind:group={recoveryType}
+                  type="radio"
+                  name="type"
+                  value="password"
+                />
+                I forgot my password.
+              </label>
+              <label>
+                <input
+                  class="pf-field {classRadio}"
+                  bind:group={recoveryType}
+                  type="radio"
+                  name="type"
+                  value="username"
+                />
+                I forgot my username.
+              </label>
             </div>
           {/if}
           <div class="pf-element">
             {#if recoveryType === 'password'}
-              <p>To reset your password, type the {_clientConfig.email_usernames ? 'email' : 'username'} you use to sign in below.</p>
+              <p>
+                To reset your password, type the {_clientConfig.email_usernames ? 'email' : 'username'}
+                you use to sign in below.
+              </p>
             {/if}
             {#if recoveryType === 'username'}
-              <p>To get your username, type your email as you entered it when creating your account.</p>
+              <p>
+                To get your username, type your email as you entered it when
+                creating your account.
+              </p>
             {/if}
           </div>
           <div class="pf-element">
             <label>
               {#if recoveryType === 'password'}
-                <span class="pf-label">{_clientConfig.email_usernames ? 'Email Address' : 'Username'}</span>
+                <span class="pf-label">
+                  {_clientConfig.email_usernames ? 'Email Address' : 'Username'}
+                </span>
               {/if}
               {#if recoveryType === 'username'}
                 <span class="pf-label">Email Address</span>
               {/if}
-              <input class="pf-field {classInput}" type="text" bind:this={_accountElem} bind:value={account} size="24" autocapitalize="off" spellcheck="false" />
+              <input
+                class="pf-field {classInput}"
+                type="text"
+                bind:this={_accountElem}
+                bind:value={account}
+                size="24"
+                autocapitalize="off"
+                spellcheck="false"
+              />
             </label>
           </div>
         {:else}
           <div class="pf-element">
             <p>
-              A code has been sent to you by email. Enter that code here, and a new password for your account.
+              A code has been sent to you by email. Enter that code here, and a
+              new password for your account.
             </p>
           </div>
           <div class="pf-element">
             <label>
               <span class="pf-label">Recovery Code</span>
-              <input class="pf-field {classInput}" bind:value={secret} type="text" size="24" />
+              <input
+                class="pf-field {classInput}"
+                bind:value={secret}
+                type="text"
+                size="24"
+              />
             </label>
           </div>
           <div class="pf-element">
             <label>
               <span class="pf-label">Password</span>
-              <input class="pf-field {classInput}" bind:value={password} type="password" autocomplete="new-password" size="24" />
+              <input
+                class="pf-field {classInput}"
+                bind:value={password}
+                type="password"
+                autocomplete="new-password"
+                size="24"
+              />
             </label>
           </div>
           <div class="pf-element">
             <label>
               <span class="pf-label">Re-enter Password</span>
-              <input class="pf-field {classInput}" bind:value={password2} type="password" autocomplete="new-password" size="24" />
+              <input
+                class="pf-field {classInput}"
+                bind:value={password2}
+                type="password"
+                autocomplete="new-password"
+                size="24"
+              />
             </label>
           </div>
         {/if}
@@ -94,11 +176,29 @@
 
         <div class="pf-element pf-buttons">
           {#if !_hasSentSecret}
-            <button class="pf-button {classSubmit}" type="submit" on:click={sendRecoveryLink}>Send Recovery Link</button>
+            <button
+              class="pf-button {classSubmit}"
+              type="submit"
+              on:click={sendRecoveryLink}
+            >
+              Send Recovery Link
+            </button>
           {:else}
-            <button class="pf-button {classSubmit}" type="submit" on:click={recover}>Reset Password</button>
+            <button
+              class="pf-button {classSubmit}"
+              type="submit"
+              on:click={recover}
+            >
+              Reset Password
+            </button>
           {/if}
-          <button class="pf-button {classButton}" type="button" on:click={() => _showDialog = false}>Close</button>
+          <button
+            class="pf-button {classButton}"
+            type="button"
+            on:click={() => (_showDialog = false)}
+          >
+            Close
+          </button>
         </div>
       </form>
     {/if}
@@ -189,7 +289,7 @@
       () => {
         _failureMessage = 'An error occurred.';
         _recovering = false;
-      }
+      },
     );
   }
 
@@ -230,7 +330,7 @@
       () => {
         _failureMessage = 'An error occurred.';
         _recovering = false;
-      }
+      },
     );
   }
 </script>
@@ -268,7 +368,7 @@
   }
   .recovery-dialog-container.layout-compact .recovery-dialog {
     padding: 2em;
-    box-shadow: 0px 5px 36px 0px rgba(0,0,0,0.25);
+    box-shadow: 0px 5px 36px 0px rgba(0, 0, 0, 0.25);
     background-color: #fff;
     max-height: 80vh;
     max-width: 80vw;

@@ -1,38 +1,69 @@
 <svelte:options accessors={true} />
 {#if _user && _user.guid}
   {#if layout === 'compact'}
-    <a href="javascript:void(0);" on:click={() => _showDialog = true}>{compactText}</a>
+    <a href="javascript:void(0);" on:click={() => (_showDialog = true)}>
+      {compactText}
+    </a>
   {/if}
 
   {#if layout !== 'compact' || _showDialog}
     <div class="change-password-dialog-container layout-{layout}">
-      <div class="change-password-dialog-overlay" on:click={() => _showDialog = false}></div>
+      <div
+        class="change-password-dialog-overlay"
+        on:click={() => (_showDialog = false)}
+      />
       {#if _changing}
         <div class="change-password-dialog loading">
           <span>
-            <svg style="display: inline;" width="16" height="16" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" version="1.1">
-              <path d="M 150,0 a 150,150 0 0,1 106.066,256.066 l -35.355,-35.355 a -100,-100 0 0,0 -70.711,-170.711 z" fill="#000000">
-                <animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 150 150" to="360 150 150" begin="0s" dur="1s" fill="freeze" repeatCount="indefinite" />
+            <svg
+              style="display: inline;"
+              width="16"
+              height="16"
+              viewBox="0 0 300 300"
+              xmlns="http://www.w3.org/2000/svg"
+              version="1.1"
+            >
+              <path
+                d="M 150,0 a 150,150 0 0,1 106.066,256.066 l -35.355,-35.355 a
+                -100,-100 0 0,0 -70.711,-170.711 z"
+                fill="#000000"
+              >
+                <animateTransform
+                  attributeName="transform"
+                  attributeType="XML"
+                  type="rotate"
+                  from="0 150 150"
+                  to="360 150 150"
+                  begin="0s"
+                  dur="1s"
+                  fill="freeze"
+                  repeatCount="indefinite"
+                />
               </path>
             </svg>
-            {#if _changing}
-              This will just take a second...
-            {/if}
+            {#if _changing}This will just take a second...{/if}
           </span>
         </div>
       {:else if _successChangedMessage}
         <div class="change-password-dialog">
-          <div>
-            {_successChangedMessage}
-          </div>
+          <div>{_successChangedMessage}</div>
           {#if layout === 'compact'}
             <div class="close-button-container">
-              <button class="pf-button {classButton}" type="button" on:click={() => _showDialog = false}>Close</button>
+              <button
+                class="pf-button {classButton}"
+                type="button"
+                on:click={() => (_showDialog = false)}
+              >
+                Close
+              </button>
             </div>
           {/if}
         </div>
       {:else}
-        <form onsubmit="return false;" class="change-password-dialog pf-form {layout === 'small' ? 'pf-layout-block' : ''}">
+        <form
+          onsubmit="return false;"
+          class="change-password-dialog pf-form {layout === 'small' ? 'pf-layout-block' : ''}"
+        >
           {#if layout === 'compact'}
             <div class="pf-element pf-heading">
               <h2 class="change-password-dialog-title">{compactText}</h2>
@@ -41,19 +72,40 @@
           <div class="pf-element">
             <label>
               <span class="pf-label">Old Password</span>
-              <input class="pf-field {classInput}" bind:value={oldPassword} type="password" autocomplete="current-password" name="oldPassword" size="24" />
+              <input
+                class="pf-field {classInput}"
+                bind:value={oldPassword}
+                type="password"
+                autocomplete="current-password"
+                name="oldPassword"
+                size="24"
+              />
             </label>
           </div>
           <div class="pf-element">
             <label>
               <span class="pf-label">New Password</span>
-              <input class="pf-field {classInput}" bind:value={password} type="password" autocomplete="new-password" name="password" size="24" />
+              <input
+                class="pf-field {classInput}"
+                bind:value={password}
+                type="password"
+                autocomplete="new-password"
+                name="password"
+                size="24"
+              />
             </label>
           </div>
           <div class="pf-element">
             <label>
               <span class="pf-label">Re-enter New Password</span>
-              <input class="pf-field {classInput}" bind:value={password2} type="password" autocomplete="new-password" name="password2" size="24" />
+              <input
+                class="pf-field {classInput}"
+                bind:value={password2}
+                type="password"
+                autocomplete="new-password"
+                name="password2"
+                size="24"
+              />
             </label>
           </div>
 
@@ -68,18 +120,28 @@
           {/if}
 
           <div class="pf-element {layout === 'small' ? '' : 'pf-buttons'}">
-            <button class="pf-button {classSubmit}" type="submit" on:click={changePassword}>Change Password</button>
+            <button
+              class="pf-button {classSubmit}"
+              type="submit"
+              on:click={changePassword}
+            >
+              Change Password
+            </button>
             {#if layout === 'compact'}
-              <button class="pf-button {classButton}" type="button" on:click={() => _showDialog = false}>Close</button>
+              <button
+                class="pf-button {classButton}"
+                type="button"
+                on:click={() => (_showDialog = false)}
+              >
+                Close
+              </button>
             {/if}
           </div>
         </form>
       {/if}
     </div>
   {/if}
-{:else}
-  You must be logged in to change your password.
-{/if}
+{:else}You must be logged in to change your password.{/if}
 
 <script>
   import { onMount } from 'svelte';
@@ -172,11 +234,12 @@
           () => {
             _failureMessage = 'An error occurred.';
             _changing = false;
-          }
+          },
         );
     });
   }
 </script>
+
 <style>
   .change-password-dialog-container {
     display: flex;
@@ -194,7 +257,8 @@
   .change-password-dialog-overlay {
     display: none;
   }
-  .change-password-dialog-container.layout-compact .change-password-dialog-overlay {
+  .change-password-dialog-container.layout-compact
+    .change-password-dialog-overlay {
     display: block;
     position: absolute;
     top: 0;
@@ -210,14 +274,15 @@
   }
   .change-password-dialog-container.layout-compact .change-password-dialog {
     padding: 2em;
-    box-shadow: 0px 5px 36px 0px rgba(0,0,0,0.25);
+    box-shadow: 0px 5px 36px 0px rgba(0, 0, 0, 0.25);
     background-color: #fff;
     max-height: 80vh;
     max-width: 80vw;
     overflow: auto;
     z-index: 2;
   }
-  .change-password-dialog-container.layout-compact .change-password-dialog.loading {
+  .change-password-dialog-container.layout-compact
+    .change-password-dialog.loading {
     width: 90vw;
     height: 90vh;
     max-width: 260px;

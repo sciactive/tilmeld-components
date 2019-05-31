@@ -13,7 +13,7 @@ module.exports = {
     globalObject: 'this',
   },
   resolve: {
-    extensions: ['.wasm', '.mjs', '.js', '.json', '.html'],
+    extensions: ['.wasm', '.mjs', '.js', '.json', '.html', '.svelte'],
   },
   externals: {
     'nymph-client': 'nymph-client',

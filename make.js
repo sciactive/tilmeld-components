@@ -12,24 +12,27 @@ try {
 
 // Compile Svelte component.
 for (let name of components) {
-  const srcFilename = 'src/' + name + '.html';
-  const dstFilename = 'lib/' + name + '.js';
-  let code = fs.readFileSync(srcFilename, 'utf8');
-  let map;
+  const srcFilename = 'src/' + name + '.svelte';
+  const dstFilenameJs = 'lib/' + name + '.js';
+  const dstFilenameCss = 'lib/' + name + '.css';
+  let source = fs.readFileSync(srcFilename, 'utf8');
 
-  const { js } = svelte.compile(code, {
+  const { js, css } = svelte.compile(source, {
     format: 'esm',
     filename: srcFilename,
     name,
     css: false,
   });
-  ({ code, map } = js);
+
+  let { code, map } = js;
   if (map) {
     code += '\n//# sourceMappingURL=' + name + '.js.map';
   }
-
-  fs.writeFileSync(dstFilename, code);
+  fs.writeFileSync(dstFilenameJs, code);
   if (map) {
-    fs.writeFileSync(dstFilename + '.map', JSON.stringify(map));
+    fs.writeFileSync(dstFilenameJs + '.map', JSON.stringify(map));
   }
+
+  ({ code } = css);
+  fs.writeFileSync(dstFilenameCss, code);
 }

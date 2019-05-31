@@ -8,12 +8,8 @@
     "compile": "node make.js && cp src/index.js lib/",
     "pack": "webpack",
     "build": "npm run compile && npm run pack",
-    "lint": "npm run lint-other && npm run lint-svelte",
-    "lint-svelte": "eslint src/**/*.html",
-    "lint-other": "prettier -c src/**/*",
-    "format": "npm run format-other && npm run format-svelte",
-    "format-svelte": "eslint --fix src/**/*.html",
-    "format-other": "prettier --write src/**/*",
+    "lint": "prettier \"./{*.js,src/**/*.{html,svelte,js,css,scss}}\"",
+    "format": "prettier --write \"./{*.js,src/**/*.{html,svelte,js,css,scss}}\"",
     "prepare": "npm run lint && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -48,20 +44,17 @@
     "tilmeld-client": "^1.0.0-beta.24"
   },
   "devDependencies": {
-    "@babel/core": "^7.4.4",
+    "@babel/core": "^7.4.5",
     "@babel/plugin-transform-classes": "^7.4.4",
-    "@babel/preset-env": "^7.4.4",
+    "@babel/preset-env": "^7.4.5",
     "@tivac/eslint-plugin-svelte": "^1.2.1",
     "babel-eslint": "^10.0.1",
-    "babel-loader": "^8.0.5",
-    "eslint": "^5.16.0",
-    "eslint-config-prettier": "^4.2.0",
-    "eslint-plugin-html": "^5.0.3",
-    "eslint-plugin-prettier": "^3.0.1",
-    "prettier": "^1.17.0",
-    "svelte": "^3.1.0",
-    "svelte-loader": "^2.13.3",
-    "webpack": "^4.30.0",
-    "webpack-cli": "^3.3.1"
+    "babel-loader": "^8.0.6",
+    "prettier": "^1.17.1",
+    "prettier-plugin-svelte": "^0.6.0",
+    "svelte": "^3.4.4",
+    "svelte-loader": "^2.13.4",
+    "webpack": "^4.32.2",
+    "webpack-cli": "^3.3.2"
   }
 }
