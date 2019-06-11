@@ -1,18 +1,17 @@
-<svelte:options accessors={true} />
-{#if _user && _user.guid}
+{#if user && user.guid}
   {#if layout === 'compact'}
-    <a href="javascript:void(0);" on:click={() => (_showDialog = true)}>
+    <a href="javascript:void(0);" on:click={() => (showDialog = true)}>
       {compactText}
     </a>
   {/if}
 
-  {#if layout !== 'compact' || _showDialog}
+  {#if layout !== 'compact' || showDialog}
     <div class="change-password-dialog-container layout-{layout}">
       <div
         class="change-password-dialog-overlay"
-        on:click={() => (_showDialog = false)}
+        on:click={() => (showDialog = false)}
       />
-      {#if _changing}
+      {#if changing}
         <div class="change-password-dialog loading">
           <span>
             <svg
@@ -41,18 +40,18 @@
                 />
               </path>
             </svg>
-            {#if _changing}This will just take a second...{/if}
+            {#if changing}This will just take a second...{/if}
           </span>
         </div>
-      {:else if _successChangedMessage}
+      {:else if successChangedMessage}
         <div class="change-password-dialog">
-          <div>{_successChangedMessage}</div>
+          <div>{successChangedMessage}</div>
           {#if layout === 'compact'}
             <div class="close-button-container">
               <button
                 class="pf-button {classButton}"
                 type="button"
-                on:click={() => (_showDialog = false)}
+                on:click={() => (showDialog = false)}
               >
                 Close
               </button>
@@ -109,11 +108,11 @@
             </label>
           </div>
 
-          {#if _failureMessage}
+          {#if failureMessage}
             <div class="pf-element pf-full-width">
               <span class="pf-group pf-full-width">
                 <span class="pf-field" style="display: block;">
-                  {_failureMessage}
+                  {failureMessage}
                 </span>
               </span>
             </div>
@@ -131,7 +130,7 @@
               <button
                 class="pf-button {classButton}"
                 type="button"
-                on:click={() => (_showDialog = false)}
+                on:click={() => (showDialog = false)}
               >
                 Close
               </button>
@@ -144,7 +143,7 @@
 {:else}You must be logged in to change your password.{/if}
 
 <script>
-  import { onMount } from 'svelte';
+  import { onMount, onDestroy } from 'svelte';
   import { User } from 'tilmeld-client';
 
   // 'normal', 'small', or 'compact'
@@ -155,11 +154,11 @@
   export let classSubmit = '';
   export let classButton = '';
 
-  let _user = null;
-  let _showDialog = false;
-  let _changing = false;
-  let _failureMessage = null;
-  let _successChangedMessage = null;
+  let user = null;
+  let showDialog = false;
+  let changing = false;
+  let failureMessage = null;
+  let successChangedMessage = null;
 
   // These are all user provided details.
   export let oldPassword = '';
@@ -167,73 +166,81 @@
   export let password2 = '';
 
   $: {
-    if (!_showDialog) {
-      _changing = false;
-      _failureMessage = null;
-      _successChangedMessage = null;
+    if (!showDialog) {
+      changing = false;
+      failureMessage = null;
+      successChangedMessage = null;
       oldPassword = '';
       password = '';
       password2 = '';
     }
   }
 
+  const onLogin = currentUser => {
+    user = currentUser;
+  };
+  const onLogout = () => {
+    user = null;
+  };
+
   onMount(() => {
-    User.current().then(user => {
-      _user = user;
+    User.current().then(currentUser => {
+      user = currentUser;
     });
 
-    User.on('login', user => {
-      _user = user;
-    });
-    User.on('logout', () => {
-      _user = null;
-    });
+    User.on('login', onLogin);
+    User.on('logout', onLogout);
+  });
+
+  onDestroy(() => {
+    User.off('login', onLogin);
+    User.off('logout', onLogout);
   });
 
   function changePassword() {
     if (oldPassword === '') {
-      _failureMessage = 'You need to enter your current password';
+      failureMessage = 'You need to enter your current password';
       return;
     }
     if (password !== password2) {
-      _failureMessage = 'Your passwords do not match.';
+      failureMessage = 'Your passwords do not match.';
       return;
     }
     if (password === '') {
-      _failureMessage = 'You need to enter a new password';
+      failureMessage = 'You need to enter a new password';
       return;
     }
 
-    _failureMessage = null;
-    _changing = true;
+    failureMessage = null;
+    changing = true;
     // Get the current user again, in case their data has changed.
-    User.current().then(user => {
-      _user = user;
+    User.current().then(currentUser => {
+      user = currentUser;
 
-      if (!user || !user.guid) {
-        _failureMessage = 'You must be logged in.';
-        _changing = false;
+      if (!currentUser || !currentUser.guid) {
+        failureMessage = 'You must be logged in.';
+        changing = false;
         return;
       }
 
-      // Create a new user.
-      user
-        .changePassword({
+      // Change the user's password.
+      currentUser
+        .$changePassword({
           oldPassword,
           password,
         })
         .then(
           data => {
             if (!data.result) {
-              _failureMessage = data.message;
+              failureMessage = data.message;
             } else {
-              _successChangedMessage = data.message;
+              successChangedMessage = data.message;
             }
-            _changing = false;
+            changing = false;
           },
           () => {
-            _failureMessage = 'An error occurred.';
-            _changing = false;
+            failureMessage = 'An error occurred.';
+            changing = false;
           },
         );
     });

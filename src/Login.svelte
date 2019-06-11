@@ -1,17 +1,16 @@
-<svelte:options accessors={true} />
 {#if layout === 'compact'}
-  {#if _successLoginMessage}
-    {_successLoginMessage}
+  {#if successLoginMessage}
+    {successLoginMessage}
   {:else}
-    <a href="javascript:void(0);" on:click={() => (_showDialog = true)}>
+    <a href="javascript:void(0);" on:click={() => (showDialog = true)}>
       {compactText}
     </a>
   {/if}
 {/if}
-{#if layout !== 'compact' || _showDialog}
+{#if layout !== 'compact' || showDialog}
   <div class="login-dialog-container layout-{layout}">
-    <div class="login-dialog-overlay" on:click={() => (_showDialog = false)} />
-    {#if _registering || _loggingin}
+    <div class="login-dialog-overlay" on:click={() => (showDialog = false)} />
+    {#if registering || loggingIn}
       <div class="login-dialog loading">
         <span>
           <svg
@@ -40,28 +39,28 @@
               />
             </path>
           </svg>
-          {#if _registering}Registering...{/if}
-          {#if _loggingin}Logging in...{/if}
+          {#if registering}Registering...{/if}
+          {#if loggingIn}Logging in...{/if}
         </span>
       </div>
-    {:else if _successRegisteredMessage}
+    {:else if successRegisteredMessage}
       <div class="login-dialog">
-        <div>{_successRegisteredMessage}</div>
+        <div>{successRegisteredMessage}</div>
         {#if layout === 'compact'}
           <div class="close-button-container">
             <button
               class="pf-button {classButton}"
               type="button"
-              on:click={() => (_showDialog = false)}
+              on:click={() => (showDialog = false)}
             >
               Close
             </button>
           </div>
         {/if}
       </div>
-    {:else if _successLoginMessage}
+    {:else if successLoginMessage}
       <div class="login-dialog">
-        <div>{_successLoginMessage}</div>
+        <div>{successLoginMessage}</div>
       </div>
     {:else}
       <form
@@ -73,7 +72,7 @@
             <h2 class="login-dialog-title">{compactText}</h2>
           </div>
         {/if}
-        {#if _clientConfig.allow_registration && showExistingUserToggle}
+        {#if clientConfig.allow_registration && showExistingUserToggle}
           <div class="pf-element pf-full-width">
             <span class={classButtonGroup}>
               <button
@@ -105,17 +104,17 @@
         <div class="pf-element">
           <label>
             <span class="pf-label">
-              {_clientConfig.email_usernames ? 'Email' : 'Username'}
+              {clientConfig.email_usernames ? 'Email' : 'Username'}
             </span>
             <span
               class={layout !== 'small' ? 'pf-group' : ''}
               style="display: {layout !== 'small' ? 'block' : 'in-line'};"
             >
-              {#if _clientConfig.email_usernames}
+              {#if clientConfig.email_usernames}
                 <input
                   class="pf-field {classInput}"
                   bind:value={username}
-                  bind:this={_usernameElem}
+                  bind:this={usernameElem}
                   type="email"
                   autocomplete="email"
                   name="email"
@@ -127,7 +126,7 @@
                 <input
                   class="pf-field {classInput}"
                   bind:value={username}
-                  bind:this={_usernameElem}
+                  bind:this={usernameElem}
                   type="text"
                   autocomplete="username"
                   name="username"
@@ -140,8 +139,8 @@
                 {#if layout === 'small' || layout === 'compact'}
                   <br class="pf-clearing" />
                 {/if}
-                {#if _usernameVerifiedMessage}
-                  <span class="pf-field">{_usernameVerifiedMessage}</span>
+                {#if usernameVerifiedMessage}
+                  <span class="pf-field">{usernameVerifiedMessage}</span>
                 {/if}
               {/if}
             </span>
@@ -154,13 +153,13 @@
               class="pf-field {classInput}"
               bind:value={password}
               type="password"
-              autocomplete="{_clientConfig.allow_registration && !existingUser ? 'new' : 'current'}-password"
+              autocomplete="{clientConfig.allow_registration && !existingUser ? 'new' : 'current'}-password"
               name="password"
               size="24"
             />
           </label>
         </div>
-        {#if _clientConfig.allow_registration && !existingUser}
+        {#if clientConfig.allow_registration && !existingUser}
           <div class="pf-element">
             <label>
               <span class="pf-label">Re-enter Password</span>
@@ -174,7 +173,7 @@
               />
             </label>
           </div>
-          {#if _clientConfig.reg_fields.indexOf('name') !== -1}
+          {#if clientConfig.reg_fields.indexOf('name') !== -1}
             <div class="pf-element">
               <label>
                 <span class="pf-label">Name</span>
@@ -189,7 +188,7 @@
               </label>
             </div>
           {/if}
-          {#if !_clientConfig.email_usernames && _clientConfig.reg_fields.indexOf('email') !== -1}
+          {#if !clientConfig.email_usernames && clientConfig.reg_fields.indexOf('email') !== -1}
             <div class="pf-element">
               <label>
                 <span class="pf-label">Email</span>
@@ -206,7 +205,7 @@
               </label>
             </div>
           {/if}
-          {#if _clientConfig.reg_fields.indexOf('phone') !== -1}
+          {#if clientConfig.reg_fields.indexOf('phone') !== -1}
             <div class="pf-element">
               <label>
                 <span class="pf-label">Phone Number</span>
@@ -221,7 +220,7 @@
               </label>
             </div>
           {/if}
-          {#if _clientConfig.reg_fields.indexOf('timezone') !== -1}
+          {#if clientConfig.reg_fields.indexOf('timezone') !== -1}
             <div class="pf-element {layout === 'small' ? 'pf-full-width' : ''}">
               <label>
                 <span class="pf-label">Timezone</span>
@@ -239,7 +238,7 @@
                     style={layout === 'small' ? 'max-width: 95%;' : ''}
                   >
                     <option value="">--Default--</option>
-                    {#each _clientConfig.timezones as tz}
+                    {#each clientConfig.timezones as tz}
                       <option value={tz}>{tz}</option>
                     {/each}
                   </select>
@@ -247,7 +246,7 @@
               </label>
             </div>
           {/if}
-          {#if _clientConfig.reg_fields.indexOf('address') !== -1}
+          {#if clientConfig.reg_fields.indexOf('address') !== -1}
             <div class="pf-element">
               <span class="pf-label">Address Type</span>
               <label>
@@ -360,14 +359,14 @@
             {/if}
           {/if}
         {/if}
-        {#if _failureMessage}
+        {#if failureMessage}
           <div class="pf-element pf-full-width">
             <span class="pf-group pf-full-width">
               <span
                 class="pf-field"
                 style="display: block; white-space: pre-line;"
               >
-                {_failureMessage}
+                {failureMessage}
               </span>
             </span>
           </div>
@@ -395,14 +394,14 @@
             <button
               class="pf-button {classButton}"
               type="button"
-              on:click={() => (_showDialog = false)}
+              on:click={() => (showDialog = false)}
             >
               Close
             </button>
           {/if}
         </div>
 
-        {#if !hideRecovery && _clientConfig.pw_recovery && existingUser}
+        {#if !hideRecovery && clientConfig.pw_recovery && existingUser}
           <div class="pf-element pf-full-width">
             <span class="pf-group pf-full-width">
               <span class="pf-field" style="display: block;">
@@ -527,23 +526,23 @@
   export let addressZip = '';
   export let addressInternational = '';
 
-  let _clientConfig = {
+  let clientConfig = {
     reg_fields: [],
     email_usernames: true,
     allow_registration: true,
     pw_recovery: true,
     timezones: [],
   };
-  let _showDialog = false;
-  let _registering = false;
-  let _usernameElem;
-  let _successLoginMessage;
-  let _successRegisteredMessage;
-  let _failureMessage;
-  let _usernameTimer;
-  let _usernameVerified;
-  let _usernameVerifiedMessage;
-  let _loggingin;
+  let showDialog = false;
+  let registering = false;
+  let usernameElem;
+  let successLoginMessage;
+  let successRegisteredMessage;
+  let failureMessage;
+  let usernameTimer;
+  let usernameVerified;
+  let usernameVerifiedMessage;
+  let loggingIn;
 
   $: nameFirst = name.match(/^(.*?)(?: ([^ ]+))?$/)[1] || '';
   $: nameLast = name.match(/^(.*?)(?: ([^ ]+))?$/)[2] || '';
@@ -562,150 +561,146 @@
 
   onMount(() => {
     User.getClientConfig().then(config => {
-      _clientConfig = config;
-      if (!_clientConfig.allow_registration) {
+      clientConfig = config;
+      if (!clientConfig.allow_registration) {
         existingUser = true;
       }
-      if (autofocus && _usernameElem) {
-        _usernameElem.focus();
+      if (autofocus && usernameElem) {
+        usernameElem.focus();
       }
     });
   });
 
   function login() {
     if (username === '') {
-      _failureMessage = 'You need to enter a username.';
+      failureMessage = 'You need to enter a username.';
       return;
     }
     if (password === '') {
-      _failureMessage = 'You need to enter a password';
+      failureMessage = 'You need to enter a password';
       return;
     }
 
-    _failureMessage = null;
-    _loggingin = true;
+    failureMessage = null;
+    loggingIn = true;
     User.loginUser({
       username,
       password,
     }).then(
       data => {
         if (!data.result) {
-          _failureMessage = data.message;
+          failureMessage = data.message;
         } else {
-          _successLoginMessage = data.message;
-          _showDialog = false;
+          successLoginMessage = data.message;
+          showDialog = false;
           dispatch('login', { user: data.user });
         }
-        _loggingin = false;
+        loggingIn = false;
       },
       () => {
-        _failureMessage = 'An error occurred.';
-        _loggingin = false;
+        failureMessage = 'An error occurred.';
+        loggingIn = false;
       },
     );
   }
 
   function register() {
     if (username === '') {
-      _failureMessage = 'You need to enter a username.';
+      failureMessage = 'You need to enter a username.';
       return;
     }
-    if (!_usernameVerified) {
-      _failureMessage = 'The username you entered is not valid.';
+    if (!usernameVerified) {
+      failureMessage = 'The username you entered is not valid.';
       return;
     }
     if (password !== password2) {
-      _failureMessage = 'Your passwords do not match.';
+      failureMessage = 'Your passwords do not match.';
       return;
     }
     if (password === '') {
-      _failureMessage = 'You need to enter a password';
+      failureMessage = 'You need to enter a password';
       return;
     }
 
     // Create a new user.
     let user = new User();
-    user.set({ username });
-    if (_clientConfig.email_usernames) {
-      user.set({ email: username });
-    } else if (_clientConfig.reg_fields.indexOf('email') !== -1) {
-      user.set({ email });
+    user.username = username;
+    if (clientConfig.email_usernames) {
+      user.email = username;
+    } else if (clientConfig.reg_fields.indexOf('email') !== -1) {
+      user.email = email;
     }
-    if (_clientConfig.reg_fields.indexOf('name') !== -1) {
-      user.set({
-        nameFirst,
-        nameLast,
-      });
+    if (clientConfig.reg_fields.indexOf('name') !== -1) {
+      user.nameFirst = nameFirst;
+      user.nameLast = nameLast;
     }
-    if (_clientConfig.reg_fields.indexOf('phone') !== -1) {
-      user.set({ phone });
+    if (clientConfig.reg_fields.indexOf('phone') !== -1) {
+      user.phone = phone;
     }
-    if (_clientConfig.reg_fields.indexOf('timezone') !== -1) {
-      user.set({ timezone });
+    if (clientConfig.reg_fields.indexOf('timezone') !== -1) {
+      user.timezone = timezone;
     }
-    if (_clientConfig.reg_fields.indexOf('address') !== -1) {
-      user.set({
-        addressType,
-        addressStreet,
-        addressStreet2,
-        addressCity,
-        addressState,
-        addressZip,
-        addressInternational,
-      });
+    if (clientConfig.reg_fields.indexOf('address') !== -1) {
+      user.addressType = addressType;
+      user.addressStreet = addressStreet;
+      user.addressStreet2 = addressStreet2;
+      user.addressCity = addressCity;
+      user.addressState = addressState;
+      user.addressZip = addressZip;
+      user.addressInternational = addressInternational;
     }
 
-    _failureMessage = null;
-    _registering = true;
-    user.register({ password }).then(
+    failureMessage = null;
+    registering = true;
+    user.$register({ password }).then(
       data => {
         if (!data.result) {
-          _failureMessage = data.message;
+          failureMessage = data.message;
         } else {
-          _successRegisteredMessage = data.message;
-          dispatch('register', { user });
+          successRegisteredMessage = data.message;
+          dispatch('register', user);
         }
         if (data.loggedin) {
-          _successLoginMessage = data.message;
-          _showDialog = false;
-          dispatch('login', { user });
+          successLoginMessage = data.message;
+          showDialog = false;
+          dispatch('login', user);
         }
-        _registering = false;
+        registering = false;
       },
       err => {
-        _failureMessage =
+        failureMessage =
           err.exception === 'Tilmeld\\Exceptions\\BadDataException'
             ? err.message
             : 'An error occurred.';
-        _registering = false;
+        registering = false;
       },
     );
   }
 
   function checkUsername(newValue) {
-    _usernameVerified = null;
-    _usernameVerifiedMessage = null;
-    if (_usernameTimer) {
-      clearTimeout(_usernameTimer);
-      _usernameTimer = null;
+    usernameVerified = null;
+    usernameVerifiedMessage = null;
+    if (usernameTimer) {
+      clearTimeout(usernameTimer);
+      usernameTimer = null;
     }
     if (newValue === '' || existingUser) {
       return;
     }
-    _usernameTimer = setTimeout(() => {
+    usernameTimer = setTimeout(() => {
       let user = new User();
-      user.set({ username: newValue });
-      if (_clientConfig.email_usernames) {
-        user.set({ email: newValue });
+      user.username = newValue;
+      if (clientConfig.email_usernames) {
+        user.email = newValue;
       }
-      user.checkUsername().then(
+      user.$checkUsername().then(
         data => {
-          _usernameVerified = data.result;
-          _usernameVerifiedMessage = data.result ? '' : data.message;
+          usernameVerified = data.result;
+          usernameVerifiedMessage = data.result ? '' : data.message;
         },
         () => {
-          _usernameVerified = false;
-          _usernameVerifiedMessage = 'Error checking username.';
+          usernameVerified = false;
+          usernameVerifiedMessage = 'Error checking username.';
         },
       );
     }, 400);

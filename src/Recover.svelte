@@ -1,15 +1,14 @@
-<svelte:options accessors={true} />
-<a href="javascript:void(0);" on:click={() => (_showDialog = true)}>
+<a href="javascript:void(0);" on:click={() => (showDialog = true)}>
   {linkText}
 </a>
 
-{#if _showDialog}
+{#if showDialog}
   <div class="recovery-dialog-container layout-compact">
     <div
       class="recovery-dialog-overlay"
-      on:click={() => (_showDialog = false)}
+      on:click={() => (showDialog = false)}
     />
-    {#if _recovering}
+    {#if recovering}
       <div class="recovery-dialog loading">
         <span>
           <svg
@@ -41,14 +40,14 @@
           This will just take a second...
         </span>
       </div>
-    {:else if _successRecoveredMessage}
+    {:else if successRecoveredMessage}
       <div class="recovery-dialog">
-        <div>{_successRecoveredMessage}</div>
+        <div>{successRecoveredMessage}</div>
         <div class="close-button-container">
           <button
             class="pf-button {classButton}"
             type="button"
-            on:click={() => (_showDialog = false)}
+            on:click={() => (showDialog = false)}
           >
             Close
           </button>
@@ -59,8 +58,8 @@
         <div class="pf-element pf-heading">
           <h2 class="recovery-dialog-title">Account Recovery</h2>
         </div>
-        {#if !_hasSentSecret}
-          {#if !_clientConfig.email_usernames}
+        {#if !hasSentSecret}
+          {#if !clientConfig.email_usernames}
             <div class="pf-element">
               <span class="pf-label">Recovery Type</span>
               <label>
@@ -88,7 +87,7 @@
           <div class="pf-element">
             {#if recoveryType === 'password'}
               <p>
-                To reset your password, type the {_clientConfig.email_usernames ? 'email' : 'username'}
+                To reset your password, type the {clientConfig.email_usernames ? 'email' : 'username'}
                 you use to sign in below.
               </p>
             {/if}
@@ -103,7 +102,7 @@
             <label>
               {#if recoveryType === 'password'}
                 <span class="pf-label">
-                  {_clientConfig.email_usernames ? 'Email Address' : 'Username'}
+                  {clientConfig.email_usernames ? 'Email Address' : 'Username'}
                 </span>
               {/if}
               {#if recoveryType === 'username'}
@@ -112,7 +111,7 @@
               <input
                 class="pf-field {classInput}"
                 type="text"
-                bind:this={_accountElem}
+                bind:this={accountElem}
                 bind:value={account}
                 size="24"
                 autocapitalize="off"
@@ -164,18 +163,18 @@
           </div>
         {/if}
 
-        {#if _failureMessage}
+        {#if failureMessage}
           <div class="pf-element pf-full-width">
             <span class="pf-group pf-full-width">
               <span class="pf-field" style="display: block;">
-                {_failureMessage}
+                {failureMessage}
               </span>
             </span>
           </div>
         {/if}
 
         <div class="pf-element pf-buttons">
-          {#if !_hasSentSecret}
+          {#if !hasSentSecret}
             <button
               class="pf-button {classSubmit}"
               type="submit"
@@ -195,7 +194,7 @@
           <button
             class="pf-button {classButton}"
             type="button"
-            on:click={() => (_showDialog = false)}
+            on:click={() => (showDialog = false)}
           >
             Close
           </button>
@@ -225,95 +224,89 @@
   export let password = '';
   export let password2 = '';
 
-  let _clientConfig = {
+  let clientConfig = {
     reg_fields: [],
     email_usernames: true,
     allow_registration: true,
     pw_recovery: true,
     timezones: [],
   };
-  let _showDialog = false;
-  let _recovering = false;
-  let _hasSentSecret = false;
-  let _accountElem;
-  let _failureMessage;
-  let _successRecoveredMessage;
+  let showDialog = false;
+  let recovering = false;
+  let hasSentSecret = false;
+  let accountElem;
+  let failureMessage;
+  let successRecoveredMessage;
 
-  let _previousShowDialog;
   $: {
-    if (
-      _previousShowDialog !== _showDialog &&
-      _showDialog &&
-      autofocus &&
-      _accountElem
-    ) {
-      _accountElem.focus();
+    if (showDialog && autofocus && accountElem) {
+      accountElem.focus();
     }
   }
 
   onMount(() => {
     User.getClientConfig().then(config => {
-      _clientConfig = config;
+      clientConfig = config;
     });
   });
 
   function sendRecoveryLink() {
     if (account === '') {
-      _failureMessage =
+      failureMessage =
         'You need to enter ' +
-        (_clientConfig.email_usernames || recoveryType === 'username'
+        (clientConfig.email_usernames || recoveryType === 'username'
           ? 'an email address'
           : 'a username') +
         '.';
       return;
     }
 
-    _failureMessage = null;
-    _recovering = true;
+    failureMessage = null;
+    recovering = true;
     User.sendRecoveryLink({
       recoveryType,
       account,
     }).then(
       data => {
         if (!data.result) {
-          _failureMessage = data.message;
+          failureMessage = data.message;
         } else {
           if (recoveryType === 'username') {
-            _successRecoveredMessage = data.message;
+            successRecoveredMessage = data.message;
           } else if (recoveryType === 'password') {
-            _hasSentSecret = true;
+            hasSentSecret = true;
           }
         }
-        _recovering = false;
+        recovering = false;
       },
       () => {
-        _failureMessage = 'An error occurred.';
-        _recovering = false;
+        failureMessage = 'An error occurred.';
+        recovering = false;
       },
     );
   }
 
   function recover() {
     if (account === '') {
-      _failureMessage =
+      failureMessage =
         'You need to enter ' +
-        (_clientConfig.email_usernames || recoveryType === 'username'
+        (clientConfig.email_usernames || recoveryType === 'username'
           ? 'an email address'
           : 'a username') +
         '.';
       return;
     }
     if (password !== password2) {
-      _failureMessage = 'Your passwords do not match.';
+      failureMessage = 'Your passwords do not match.';
       return;
     }
     if (password === '') {
-      _failureMessage = 'You need to enter a password.';
+      failureMessage = 'You need to enter a password.';
       return;
     }
 
-    _failureMessage = null;
-    _recovering = true;
+    failureMessage = null;
+    recovering = true;
     User.recover({
       username: account,
       secret,
@@ -321,15 +314,15 @@
     }).then(
       data => {
         if (!data.result) {
-          _failureMessage = data.message;
+          failureMessage = data.message;
         } else {
-          _successRecoveredMessage = data.message;
+          successRecoveredMessage = data.message;
         }
-        _recovering = false;
+        recovering = false;
       },
       () => {
-        _failureMessage = 'An error occurred.';
-        _recovering = false;
+        failureMessage = 'An error occurred.';
+        recovering = false;
       },
     );
   }
