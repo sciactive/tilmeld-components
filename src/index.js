@@ -1,5 +1,5 @@
-import ChangePassword from './ChangePassword';
-import Login from './Login';
-import Recover from './Recover';
+import ChangePassword from './ChangePassword.svelte';
+import Login from './Login.svelte';
+import Recover from './Recover.svelte';
 
 export { ChangePassword, Login, Recover };
