@@ -5,7 +5,9 @@ let clientConfigPromise = null;
 export function getClientConfig() {
   if (!clientConfig) {
     if (!clientConfigPromise) {
-      clientConfigPromise = User.getClientConfig().then(config => clientConfig = config);
+      clientConfigPromise = User.getClientConfig().then(
+        (config) => (clientConfig = config),
+      );
     }
     return clientConfigPromise;
   }
@@ -24,13 +26,13 @@ export function login(username, password) {
     username,
     password,
   }).then(
-    data => {
+    (data) => {
       if (!data.result) {
         return Promise.reject(data.message);
       }
       return data;
     },
-    err => {
+    (err) => {
       return Promise.reject(err.message || 'An error occurred.');
     },
   );
@@ -53,7 +55,7 @@ export function register(userDetails) {
   // Create a new user.
   let user = new User();
   user.username = userDetails.username;
-  return getClientConfig().then(config => {
+  return getClientConfig().then((config) => {
     if (config.email_usernames) {
       user.email = userDetails.username;
     } else if (config.reg_fields.indexOf('email') !== -1) {
@@ -71,13 +73,13 @@ export function register(userDetails) {
     }
 
     return user.$register({ password: userDetails.password }).then(
-      data => {
+      (data) => {
         if (!data.result) {
           return Promise.reject(data.message);
         }
         return data;
       },
-      err => {
+      (err) => {
         return Promise.reject(err.message || 'An error occurred.');
       },
     );
@@ -87,19 +89,19 @@ export function register(userDetails) {
 export function checkUsername(username) {
   let user = new User();
   user.username = username;
-  return getClientConfig().then(config => {
+  return getClientConfig().then((config) => {
     if (config.email_usernames) {
       user.email = username;
     }
     return user.$checkUsername().then(
-      data => ({
+      (data) => ({
         result: data.result,
-        message: data.result ? '' : data.message
+        message: data.result ? '' : data.message,
       }),
-      err => ({
+      (err) => ({
         result: false,
-        message: 'Error checking username: '+err.message
-      })
+        message: 'Error checking username: ' + err.message,
+      }),
     );
   });
 }

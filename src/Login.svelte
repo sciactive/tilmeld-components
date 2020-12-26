@@ -200,9 +200,7 @@
               <span class="pf-note">
                 This overrides the primary group&apos;s timezone.
               </span>
-              <span
-                style="display: in-line;"
-              >
+              <span style="display: in-line;">
                 <select
                   class="pf-field"
                   bind:value={timezone}
@@ -274,7 +272,12 @@
 <script>
   import { onMount, createEventDispatcher } from 'svelte';
   import Recover from './Recover.svelte';
-  import { getClientConfig, login as loginAction, register as registerAction, checkUsername as checkUsernameAction } from './Actions.js';
+  import {
+    getClientConfig,
+    login as loginAction,
+    register as registerAction,
+    checkUsername as checkUsernameAction,
+  } from './Actions.js';
 
   const dispatch = createEventDispatcher();
 
@@ -340,7 +343,7 @@
   }
 
   onMount(() => {
-    getClientConfig().then(config => {
+    getClientConfig().then((config) => {
       clientConfig = config;
       if (!clientConfig.allow_registration) {
         existingUser = true;
@@ -355,14 +358,19 @@
     successLoginMessage = null;
     failureMessage = null;
     loggingIn = true;
-    loginAction(username, password).then(data => {
-      successLoginMessage = data.message;
-      dispatch('login', { user: data.user });
-    }, e => {
-      failureMessage = e;
-    }).finally(() => {
-      loggingIn = false;
-    });
+    loginAction(username, password)
+      .then(
+        (data) => {
+          successLoginMessage = data.message;
+          dispatch('login', { user: data.user });
+        },
+        (e) => {
+          failureMessage = e;
+        },
+      )
+      .finally(() => {
+        loggingIn = false;
+      });
   }
 
   function register() {
@@ -379,19 +387,24 @@
       nameFirst,
       nameLast,
       phone,
-      timezone
-    }).then(data => {
-      successRegisteredMessage = data.message;
-      dispatch('register', { user: data.user });
-      if (data.loggedin) {
-        successLoginMessage = data.message;
-        dispatch('login', { user: data.user });
-      }
-    }, e => {
-      failureMessage = e;
-    }).finally(() => {
-      registering = false;
-    });
+      timezone,
+    })
+      .then(
+        (data) => {
+          successRegisteredMessage = data.message;
+          dispatch('register', { user: data.user });
+          if (data.loggedin) {
+            successLoginMessage = data.message;
+            dispatch('login', { user: data.user });
+          }
+        },
+        (e) => {
+          failureMessage = e;
+        },
+      )
+      .finally(() => {
+        registering = false;
+      });
   }
 
   function checkUsername(newValue) {
@@ -405,7 +418,7 @@
       return;
     }
     usernameTimer = setTimeout(() => {
-      checkUsernameAction(newValue).then(data => {
+      checkUsernameAction(newValue).then((data) => {
         usernameVerified = data.result;
         usernameVerifiedMessage = data.message;
       });

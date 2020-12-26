@@ -176,7 +176,7 @@
     }
   }
 
-  const onLogin = currentUser => {
+  const onLogin = (currentUser) => {
     user = currentUser;
   };
   const onLogout = () => {
@@ -184,7 +184,7 @@
   };
 
   onMount(() => {
-    User.current().then(currentUser => {
+    User.current().then((currentUser) => {
       user = currentUser;
     });
 
@@ -214,7 +214,7 @@
     failureMessage = null;
     changing = true;
     // Get the current user again, in case their data has changed.
-    User.current().then(currentUser => {
+    User.current().then((currentUser) => {
       user = currentUser;
 
       if (!currentUser || !currentUser.guid) {
@@ -230,7 +230,7 @@
           password,
         })
         .then(
-          data => {
+          (data) => {
             if (!data.result) {
               failureMessage = data.message;
             } else {
