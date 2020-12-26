@@ -87,7 +87,8 @@
           <div class="pf-element">
             {#if recoveryType === 'password'}
               <p>
-                To reset your password, type the {clientConfig.email_usernames ? 'email' : 'username'}
+                To reset your password, type the
+                {clientConfig.email_usernames ? 'email' : 'username'}
                 you use to sign in below.
               </p>
             {/if}
@@ -245,7 +246,7 @@
   }
 
   onMount(() => {
-    User.getClientConfig().then(config => {
+    User.getClientConfig().then((config) => {
       clientConfig = config;
     });
   });
@@ -267,7 +268,7 @@
       recoveryType,
       account,
     }).then(
-      data => {
+      (data) => {
         if (!data.result) {
           failureMessage = data.message;
         } else {
@@ -312,7 +313,7 @@
       secret,
       password,
     }).then(
-      data => {
+      (data) => {
         if (!data.result) {
           failureMessage = data.message;
         } else {

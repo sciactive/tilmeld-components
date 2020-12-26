@@ -560,7 +560,7 @@
   }
 
   onMount(() => {
-    User.getClientConfig().then(config => {
+    User.getClientConfig().then((config) => {
       clientConfig = config;
       if (!clientConfig.allow_registration) {
         existingUser = true;
@@ -587,7 +587,7 @@
       username,
       password,
     }).then(
-      data => {
+      (data) => {
         if (!data.result) {
           failureMessage = data.message;
         } else {
@@ -653,7 +653,7 @@
     failureMessage = null;
     registering = true;
     user.$register({ password }).then(
-      data => {
+      (data) => {
         if (!data.result) {
           failureMessage = data.message;
         } else {
@@ -667,7 +667,7 @@
         }
         registering = false;
       },
-      err => {
+      (err) => {
         failureMessage =
           err.exception === 'Tilmeld\\Exceptions\\BadDataException'
             ? err.message
@@ -694,7 +694,7 @@
         user.email = newValue;
       }
       user.$checkUsername().then(
-        data => {
+        (data) => {
           usernameVerified = data.result;
           usernameVerifiedMessage = data.result ? '' : data.message;
         },
